@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faunatrack</title>
+    <!-- Lien CDN pour Tailwind CSS pour une intégration simple -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}" />
+    <script src="{% static 'admin/js/core.js' %}"></script>
+    <script src="{% url 'admin:jsi18n' %}"></script>  {# see note below #}
+
+</head>     
+
+<body class="bg-gray-100">
+    <header class="bg-white shadow">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <a class="text-gray-800 text-xl font-bold text-{{ couleur_du_ciel }}" href="{% url 'home' %}"> Home </a>
+                {% if request.user.is_authenticated %}
+                    <p>{{ request.user.username }}</p>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="background-red-500" type="submit">Logout</button>
+                    </form>
+                {% else %} 
+                    <a class="background-blue-500" href="{% url 'login' %}">Se connecter</a>
+                {% endif %}
+                <div class="flex gap-4">
+                    <a class="text-gray-800 hover:text-gray-600" href="{% url 'admin:index' %}">Admin</a> 
+                    <a class="text-gray-800 hover:text-gray-600" href="{% url 'projets_list' %}">Projets</a> 
+                    <!-- Ajoutez d'autres liens de navigation ici -->
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 mt-4 min-h-screen">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}
+        {%  for espece in especes %}
+            {{ espece.get_status_display }}
+        {% endfor %}
+       
+        <!-- Le contenu spécifique à chaque page viendra ici -->
+        {% endblock %}
+    </main>
+
+    {% include "components/footer.html" %}
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <a class="text-blue-500" href="{% url 'projet_create' %}"> Ajouter un projet !</a>
+    {% for instance in object_list %}
+        <p >{{ instance.titre }}</p>
+        <a class="text-green-500" href="{% url 'projet_update' slug=instance.slug %}">Editer le projet</a>
+        <a class="text-blue-500" href="{% url 'projet_detail' slug=instance.slug  %}">Voir le projet</a>
+        <a class="text-red-500" href="{% url 'projet_delete' slug=instance.slug  %}">Supprimer le projet</a>
+    {% endfor %}
+    {{ projet_1.titre }}
+    {{ projet_2.titre }}
+{% endblock content %}
